@@ -1,6 +1,7 @@
 package gfx;
 
 import gfx.figures.Square;
+import gfx.figures.Tetronimo;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,13 +15,18 @@ public class CanvasController implements KeyListener
         this.canvas = canvas;
     }
 
-
-    public void init()
+    Tetronimo getActiveTetronimo()
     {
+        return canvas.tetronimos[0];
+    }
+
+    public void init() throws InterruptedException {
         Square square = new Square();
         canvas.addTetronimo(square);
         canvas.addKeyListener(this);
 
+        Machine machine = new Machine(this);
+        machine.start();
     }
 
 
@@ -32,19 +38,47 @@ public class CanvasController implements KeyListener
     @Override
     public void keyPressed(KeyEvent e) {
 
+        Tetronimo tetronimo = getActiveTetronimo();
+
+        if (tetronimo == null) {
+            return;
+        }
+
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            canvas.tetronimoToLeft();
+            tetronimoLeft(tetronimo);
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            canvas.tetronimoToRight();
+            tetronimoRight(tetronimo);
         }
 
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            canvas.tetronimoUp();
+            tetronimoUp(tetronimo);
         } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            canvas.tetronimoDown();
+            tetronimoDown(tetronimo);
         }
 
     }
+
+    public void tetronimoUp(Tetronimo tetronimo)
+    {
+        canvas.tetronimoUp(tetronimo);
+    }
+
+    public void tetronimoDown(Tetronimo tetronimo)
+    {
+        canvas.tetronimoDown(tetronimo);
+    }
+
+    public void tetronimoRight(Tetronimo tetronimo)
+    {
+        canvas.tetronimoRight(tetronimo);
+    }
+
+    public void tetronimoLeft(Tetronimo tetronimo)
+    {
+        canvas.tetronimoLeft(tetronimo);
+    }
+
+
 
     @Override
     public void keyReleased(KeyEvent e) {
